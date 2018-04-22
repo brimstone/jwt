@@ -5,8 +5,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"strings"
 	"time"
 
 	jose "gopkg.in/square/go-jose.v2"
@@ -72,4 +75,13 @@ func Verify(key string, token string, receiver interface{}) error {
 		return fmt.Errorf("brimstone/jwt: unable to convert token to json: %s", err)
 	}
 	return nil
+}
+
+func VerifyBearer(key string, r *http.Request, receiver interface{}) error {
+	bearer := strings.Split(r.Header.Get("Authorization"), " ")
+	if len(bearer) != 2 || bearer[0] != "Bearer" {
+		return errors.New("Invalid Auth")
+	}
+
+	return Verify(key, bearer[1], receiver)
 }
