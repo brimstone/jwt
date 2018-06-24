@@ -45,7 +45,7 @@ func Verify(key string, token string, receiver interface{}) error {
 		// Try to decode the key
 		public, err = base64.StdEncoding.DecodeString(key)
 		if err != nil {
-			return fmt.Errorf("brimstone/jwt: unable to decode token: %s", err)
+			return fmt.Errorf("brimstone/jwt: unable to decode key: %s", err)
 		}
 	}
 
